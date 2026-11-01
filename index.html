@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EbuConecte - Rede de Apoio Pedagógico</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+            --subtext: #6b7280;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            height: 90vh;
+            max-height: 750px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            padding: 24px;
+            justify-content: center;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Tela 1: Boas-Vindas */
+        .welcome-screen {
+            text-align: center;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+        }
+
+        .welcome-screen h1 {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+        }
+
+        .welcome-screen p {
+            font-size: 1.05rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        /* Forms e Inputs */
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        p.subtitle {
+            color: var(--subtext);
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Tela Principal (App Dashboard) */
+        .main-screen {
+            justify-content: flex-start;
+            padding: 0;
+        }
+
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .feed {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .card-tag {
+            display: inline-block;
+            background: #e0e7ff;
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .card-author {
+            font-size: 0.85rem;
+            color: var(--subtext);
+            margin-bottom: 6px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        .card-text {
+            font-size: 0.95rem;
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .new-post-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            background: var(--primary);
+            color: white;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- TELA 1: Visual Inicial / Apresentação -->
+    <div id="screen-1" class="screen welcome-screen active">
+        <h1>EbuConecte 🍎</h1>
+        <p>A plataforma feita para professores compartilharem estratégias de sala de aula e se apoiarem mutuamente.</p>
+        <button onclick="nextScreen(2)">Começar Teste</button>
+    </div>
+
+    <!-- TELA 2: Envio de E-mail / Código -->
+    <div id="screen-2" class="screen">
+        <h2>Seu E-mail</h2>
+        <p class="subtitle">Enviaremos um código de verificação rápido para acesso instantâneo.</p>
+        <div class="form-group">
+            <label>E-mail Institucional ou Pessoal</label>
+            <input type="email" id="email" placeholder="professor@escola.com">
+        </div>
+        <button onclick="sendCode()">Enviar Código</button>
+    </div>
+
+    <!-- TELA 3: Código e Nome de Usuário -->
+    <div id="screen-3" class="screen">
+        <h2>Criar Perfil</h2>
+        <p class="subtitle">Digite o código recebido e escolha como deseja ser chamado na rede.</p>
+        <div class="form-group">
+            <label>Código de Acesso</label>
+            <input type="text" id="code" placeholder="Ex: 123456" maxlength="6">
+        </div>
+        <div class="form-group">
+            <label>Nome de Usuário</label>
+            <input type="text" id="username" placeholder="Ex: Prof. Carlos">
+        </div>
+        <button onclick="finishLogin()">Entrar no Aplicativo</button>
+    </div>
+
+    <!-- TELA PRINCIPAL: Feed de Estratégias Pedagógicas -->
+    <div id="screen-main" class="screen main-screen">
+        <div class="header">
+            <div>
+                <h3 id="user-display">EbuConecte</h3>
+                <small>Estratégias de Sala de Aula</small>
+            </div>
+            <span>🔔</span>
+        </div>
+
+        <div class="feed">
+            <div class="card">
+                <span class="card-tag">Dificuldade de Aprendizagem</span>
+                <div class="card-author">Por Prof. Carlos • Matemática</div>
+                <div class="card-title">Apoio para alunos com dificuldades</div>
+                <div class="card-text">Estou dividindo as atividades complexas em etapas menores. Isso tem ajudado muito os alunos que travam no início da tarefa.</div>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Gestão de Sala</span>
+                <div class="card-author">Por Profª Helena • Ensino Fundamental</div>
+                <div class="card-title">Dinâmica para engajar a turma</div>
+                <div class="card-text">Criar pequenos grupos de ajuda mútua onde um aluno monitor apoia o colega com mais dificuldade gera um ótimo resultado coletivo.</div>
+            </div>
+        </div>
+
+        <div class="new-post-btn" onclick="alert('Funcionalidade para publicar novo relato ou estratégia!')">+</div>
+    </div>
+
+</div>
+
+<script>
+    let userEmail = "";
+    let userName = "";
+
+    function nextScreen(screenNumber) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(`screen-${screenNumber}`).classList.add('active');
+    }
+
+    function sendCode() {
+        const emailInput = document.getElementById('email').value;
+        if (!emailInput) {
+            alert('Por favor, digite o seu e-mail!');
+            return;
+        }
+        userEmail = emailInput;
+        alert(`Código enviado para o e-mail: ${userEmail}`);
+        nextScreen(3);
+    }
+
+    function finishLogin() {
+        const code = document.getElementById('code').value;
+        const usernameInput = document.getElementById('username').value;
+
+        if (!code || !usernameInput) {
+            alert('Por favor, preencha o código e o nome de usuário.');
+            return;
+        }
+
+        userName = usernameInput;
+        document.getElementById('user-display').innerText = `Olá, ${userName}`;
+        
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('screen-main').classList.add('active');
+    }
+</script>
+
+</body>
+</html>
+de
